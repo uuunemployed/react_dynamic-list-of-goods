@@ -8,17 +8,30 @@ import { Good } from './types/Good';
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[]>([]);
   const [methodShowGoods, setMothodShowGoods] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     switch (methodShowGoods) {
       case 'showAllgoods':
-        getAll().then(setGoods);
+        getAll()
+          .then(setGoods)
+          .catch(() => {
+            setErrorMessage('Error, try again letter');
+          });
         break;
       case 'showFiveFirsGoods':
-        get5First().then(setGoods);
+        get5First()
+          .then(setGoods)
+          .catch(() => {
+            setErrorMessage('Error, try again letter');
+          });
         break;
       case 'showRedGoods':
-        getRedGoods().then(setGoods);
+        getRedGoods()
+          .then(setGoods)
+          .catch(() => {
+            setErrorMessage('Error, try again letter');
+          });
     }
   }, [methodShowGoods]);
 
@@ -50,7 +63,7 @@ export const App: React.FC = () => {
         Load red goods
       </button>
 
-      <GoodsList goods={goods} />
+      {!errorMessage && goods.length > 0 && <GoodsList goods={goods} />}
     </div>
   );
 };
